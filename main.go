@@ -3,16 +3,16 @@ package main
 import (
 	"log"
 	"net/http"
-)
 
-var NewUrl string = "https://github.com"
+	"github.com/boreec/URL-shortener/handler"
+)
 
 func main() {
 	mux := http.NewServeMux()
 
-	rh := http.RedirectHandler(NewUrl, http.StatusTemporaryRedirect)
+	url_shortener := handler.URLShortenerHandler{}
 
-	mux.Handle("/", rh)
+	mux.Handle("/shorten", &url_shortener)
 
 	log.Print("Listening...")
 
