@@ -8,6 +8,13 @@ import (
 var NewUrl string = "https://github.com"
 
 func main() {
-	http.Handle("/", http.RedirectHandler(NewUrl, http.StatusMovedPermanently))
-	log.Fatal(http.ListenAndServe(":9000", nil))
+	mux := http.NewServeMux()
+
+	rh := http.RedirectHandler(NewUrl, http.StatusTemporaryRedirect)
+
+	mux.Handle("/", rh)
+
+	log.Print("Listening...")
+
+	http.ListenAndServe(":3000", mux)
 }
