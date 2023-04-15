@@ -10,9 +10,11 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
-	url_shortener := handler.URLShortenerHandler{}
+	urlShortenerHandler := handler.URLShortenerHandler{}
+	homepageHandler := handler.HomepageHandler{}
 
-	mux.Handle("/shorten", &url_shortener)
+	mux.Handle("/", &homepageHandler)
+	mux.Handle("/shorten", &urlShortenerHandler)
 
 	log.Print("Listening...")
 
