@@ -6,7 +6,7 @@ import (
 )
 
 type URLShortenerHandler struct {
-	longURL string
+	urlList map[string]string
 }
 
 func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +15,14 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 		w.Write([]byte(err.Error()))
 	}
 
-	url_shortener.longURL = r.Form.Get("long_link")
+	url := r.Form.Get("long_link")
+
+	// check if url is already contained in urlList
+	if url_shortener.urlList[url] == "" {
+		w.Write([]byte(fmt.Sprintf("link %s is already shortened as %s", url, url_shortener.urlList[url])))
+	} else {
+		url_shortener.urlList[url] = shorten(url)
+	}
+
 	w.Write([]byte(fmt.Sprintf("to do: shorten %v", url_shortener)))
 }
