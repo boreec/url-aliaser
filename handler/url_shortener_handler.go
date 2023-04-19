@@ -9,6 +9,10 @@ type URLShortenerHandler struct {
 	urlList map[string]string
 }
 
+func NewURLShortenerHandler() *URLShortenerHandler {
+	return &URLShortenerHandler{urlList: make(map[string]string)}
+}
+
 func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
