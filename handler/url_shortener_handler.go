@@ -21,8 +21,12 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 	if url_shortener.urlList[url] == "" {
 		w.Write([]byte(fmt.Sprintf("link %s is already shortened as %s", url, url_shortener.urlList[url])))
 	} else {
-		url_shortener.urlList[url] = shorten(url)
+		url_shortener.urlList[url] = url_shortener.shorten(url)
 	}
 
 	w.Write([]byte(fmt.Sprintf("to do: shorten %v", url_shortener)))
+}
+
+func (url_shortener *URLShortenerHandler) shorten(url string) string {
+	return "/shortenedlink"
 }
