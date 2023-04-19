@@ -22,15 +22,16 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 	url := r.Form.Get("long_link")
 
 	// check if url is already contained in urlList
-	if url_shortener.urlList[url] == "" {
+	if url_shortener.urlList[url] != "" {
 		w.Write([]byte(fmt.Sprintf("link %s is already shortened as %s", url, url_shortener.urlList[url])))
 	} else {
-		url_shortener.urlList[url] = url_shortener.shorten(url)
+		url_shortener.urlList[url] = url_shortener.hash(url)
 	}
 
 	w.Write([]byte(fmt.Sprintf("to do: shorten %v", url_shortener)))
 }
 
-func (url_shortener *URLShortenerHandler) shorten(url string) string {
+func (url_shortener *URLShortenerHandler) hash(url string) string {
+	// to do
 	return "/shortenedlink"
 }
