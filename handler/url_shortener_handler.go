@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"hash/fnv"
 	"net/http"
 )
 
@@ -27,14 +28,20 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 	if url_shortener.urlMap[url] != "" {
 		w.Write([]byte(fmt.Sprintf("link %s is already shortened as %s", url, url_shortener.urlMap[url])))
 	} else {
-		url_shortener.urlMap[url] = url_shortener.hash(url)
+		url_shortener.urlMap[url] = url_shortener.hash(url, 10)
 	}
 
 	w.Write([]byte(fmt.Sprintf("to do: shorten %v", url_shortener)))
 }
 
 // create a hash of a given string
-func (url_shortener *URLShortenerHandler) hash(url string) string {
-	// to do
-	return "/shortenedlink"
+func (url_shortener *URLShortenerHandler) hash(url string, length int) string {
+	hash := fnv.New32a()
+	hash.Write([]byte(url))
+	hashValue := hash.Sum32()
+
+	// convert the hash value to hexadecimal string
+	hashString := fmt.Sprintf("%0*x", length/2, hashValue)
+
+	return hashString[:length]
 }
