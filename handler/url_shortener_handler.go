@@ -6,9 +6,11 @@ import (
 )
 
 type URLShortenerHandler struct {
+	// urlMap is a map that matches a long url given by the user to a shortened url calculated by a hash function.
 	urlMap map[string]string
 }
 
+// create a new URLShortenerHandler with an empty urlMap.
 func NewURLShortenerHandler() *URLShortenerHandler {
 	return &URLShortenerHandler{urlMap: make(map[string]string)}
 }
@@ -31,6 +33,7 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 	w.Write([]byte(fmt.Sprintf("to do: shorten %v", url_shortener)))
 }
 
+// create a hash of a given string
 func (url_shortener *URLShortenerHandler) hash(url string) string {
 	// to do
 	return "/shortenedlink"
