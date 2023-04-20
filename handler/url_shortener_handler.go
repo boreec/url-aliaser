@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"hash/fnv"
+	"log"
 	"net/http"
 )
 
@@ -17,7 +19,9 @@ func NewURLShortenerHandler() *URLShortenerHandler {
 }
 
 func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	var err error
+
+	err = r.ParseForm()
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
@@ -28,14 +32,21 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 	if url_shortener.urlMap[url] != "" {
 		w.Write([]byte(fmt.Sprintf("link %s is already shortened as %s", url, url_shortener.urlMap[url])))
 	} else {
-		url_shortener.urlMap[url] = url_shortener.hash(url, 10)
+		if url_shortener.urlMap[url], err = url_shortener.hash(url, 10); err != nil {
+			log.Printf("failed to shorten link '%s' for the following error:\n%s", url, err.Error())
+			w.Write([]byte(fmt.Sprintf("failed to shorten link '%s' for the following error:\n%s", url, err.Error())))
+		}
 	}
 
 	w.Write([]byte(fmt.Sprintf("to do: shorten %v", url_shortener)))
 }
 
 // create a hash of a given string
-func (url_shortener *URLShortenerHandler) hash(url string, length int) string {
+func (url_shortener *URLShortenerHandler) hash(url string, length int) (string, error) {
+	if url == "" {
+		return "", errors.New("url to hash can not be empty")
+	}
+
 	hash := fnv.New32a()
 	hash.Write([]byte(url))
 	hashValue := hash.Sum32()
@@ -43,5 +54,5 @@ func (url_shortener *URLShortenerHandler) hash(url string, length int) string {
 	// convert the hash value to hexadecimal string
 	hashString := fmt.Sprintf("%0*x", length/2, hashValue)
 
-	return hashString[:length]
+	return hashString[:length], nil
 }
