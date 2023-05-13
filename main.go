@@ -16,7 +16,14 @@ func main() {
 	mux.Handle("/", homepageHandler)
 	mux.Handle("/shorten", urlShortenerHandler)
 
-	log.Print("Listening...")
+	server := &http.Server{
+		Addr:    ":3000",
+		Handler: mux,
+	}
 
-	http.ListenAndServe(":3000", mux)
+	log.Print("Listening on localhost:3000")
+
+	if err := server.ListenAndServe(); err != nil {
+		log.Fatalf(err.Error())
+	}
 }
