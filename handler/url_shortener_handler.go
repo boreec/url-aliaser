@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"hash/fnv"
@@ -28,28 +29,40 @@ func WriteError(w http.ResponseWriter, err error) {
 	w.Write([]byte(err.Error()))
 }
 
-func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var err error
+type RequestPayload struct {
+	Url       string `json:"url"`                  // required
+	MaxLength int    `json:"max_length,omitempty"` // empty
+}
 
-	if err := r.ParseForm(); err != nil {
-		WriteError(w, err)
+type ResponsePayload struct {
+	Url string `json:"url"`
+}
+
+func (url_shortener *URLShortenerHandler) Handler(w http.ResponseWriter, r *http.Request) {
+
+	// parse incoming json payload
+	var request RequestPayload
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		// Handle parsing error
+		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
 		return
 	}
 
-	url := r.Form.Get("long_link")
-
-	// check if url is already contained in urlList
-	if url_shortener.urlMap[url] != "" {
-		WriteError(w, fmt.Errorf("link %s already shortened as %s", url, url_shortener.urlMap[url]))
-		return
-	} else {
-		if url_shortener.urlMap[url], err = url_shortener.hash(url, 10); err != nil {
-			WriteError(w, err)
-			return
-		}
+	// to do
+	// Construct the response payload
+	response := ResponsePayload{
+		Url: "shortened url",
 	}
 
-	w.Write([]byte(fmt.Sprintf("to do: shorten %v", url_shortener)))
+	// Set the Content-Type header to application/json
+	w.Header().Set("Content-Type", "application/json")
+
+	// Encode and send the response payload
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		// Handle encoding error
+		http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
+		return
+	}
 }
 
 // create a hash of a given string
