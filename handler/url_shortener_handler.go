@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"hash/fnv"
-	"log"
 	"net/http"
 
 	"golang.org/x/exp/slog"
@@ -41,11 +40,12 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 
 	// check if url is already contained in urlList
 	if url_shortener.urlMap[url] != "" {
-		w.Write([]byte(fmt.Sprintf("link %s is already shortened as %s", url, url_shortener.urlMap[url])))
+		WriteError(w, fmt.Errorf("link %s already shortened as %s", url, url_shortener.urlMap[url]))
+		return
 	} else {
 		if url_shortener.urlMap[url], err = url_shortener.hash(url, 10); err != nil {
-			log.Printf("failed to shorten link '%s' for the following error:\n%s", url, err.Error())
-			w.Write([]byte(fmt.Sprintf("failed to shorten link '%s' for the following error:\n%s", url, err.Error())))
+			WriteError(w, err)
+			return
 		}
 	}
 
