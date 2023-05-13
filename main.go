@@ -11,9 +11,9 @@ func main() {
 	mux := http.NewServeMux()
 
 	urlShortenerHandler := handler.NewURLShortenerHandler()
-	homepageHandler := handler.HomepageHandler{}
+	homepageHandler := handler.NewHomepageHandler()
 
-	mux.Handle("/", &homepageHandler)
+	mux.Handle("/", homepageHandler)
 	mux.Handle("/shorten", urlShortenerHandler)
 
 	log.Print("Listening...")
