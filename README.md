@@ -8,13 +8,13 @@ A simple URL shortener application built with Golang.
 
 ## Setup
 
-### build
+### build executable
 
 ```bash
-go build -v ./...
+go build -v
 ```
 
-### test
+### run unit test
 
 ```bash
 go test -v ./...
