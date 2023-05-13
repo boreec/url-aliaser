@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/boreec/URL-shortener/handler"
+	"golang.org/x/exp/slog"
 )
 
 func main() {
@@ -24,6 +25,6 @@ func main() {
 	log.Print("Listening on localhost:3000")
 
 	if err := server.ListenAndServe(); err != nil {
-		log.Fatalf(err.Error())
+		slog.Error(err.Error())
 	}
 }
