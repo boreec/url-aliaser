@@ -1,11 +1,17 @@
 package handler
 
-import "testing"
+import (
+	"errors"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestHashWithEmptyString(t *testing.T) {
 	shortenerHandler := NewURLShortenerHandler()
 
-	if _, err := shortenerHandler.hash("", 10); err == nil {
-		t.Fatal("hash function should return error when empty string\n")
-	}
+	_, err := shortenerHandler.hash("", 10)
+
+	assert.NotNil(t, err)
+	assert.True(t, errors.Is(err, ErrEmptyGivenUrl))
 }

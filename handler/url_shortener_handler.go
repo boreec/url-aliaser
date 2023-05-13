@@ -8,6 +8,10 @@ import (
 	"net/http"
 )
 
+var (
+	ErrEmptyGivenUrl = errors.New("given url is empty")
+)
+
 type URLShortenerHandler struct {
 	// urlMap is a map that matches a long url given by the user to a shortened url calculated by a hash function.
 	urlMap map[string]string
@@ -44,7 +48,7 @@ func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *ht
 // create a hash of a given string
 func (url_shortener *URLShortenerHandler) hash(url string, length int) (string, error) {
 	if url == "" {
-		return "", errors.New("url to hash can not be empty")
+		return "", ErrEmptyGivenUrl
 	}
 
 	hash := fnv.New32a()
