@@ -6,6 +6,8 @@ import (
 	"hash/fnv"
 	"log"
 	"net/http"
+
+	"golang.org/x/exp/slog"
 )
 
 var (
@@ -22,12 +24,17 @@ func NewURLShortenerHandler() *URLShortenerHandler {
 	return &URLShortenerHandler{urlMap: make(map[string]string)}
 }
 
+func WriteError(w http.ResponseWriter, err error) {
+	slog.Info(err.Error())
+	w.Write([]byte(err.Error()))
+}
+
 func (url_shortener *URLShortenerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	err = r.ParseForm()
-	if err != nil {
-		w.Write([]byte(err.Error()))
+	if err := r.ParseForm(); err != nil {
+		WriteError(w, err)
+		return
 	}
 
 	url := r.Form.Get("long_link")
