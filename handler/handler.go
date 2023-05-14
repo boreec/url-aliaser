@@ -16,7 +16,7 @@ type PayloadResponse struct {
 	Url string `json:"url"`
 }
 
-func handleRequest(w http.ResponseWriter, r *http.Request) {
+func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var payloadRequest PayloadRequest
 		err := json.NewDecoder(r.Body).Decode(&payloadRequest)
