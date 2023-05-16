@@ -23,6 +23,7 @@ type PayloadResponse struct {
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, ErrInvalidRequestMethod.Error(), http.StatusMethodNotAllowed)
+		return
 	}
 
 	// decode request's payload into a PayloadRequest
@@ -38,6 +39,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	shortUrl, err := model.ShortenUrl(payloadRequest.Length)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	// return response with payload within
