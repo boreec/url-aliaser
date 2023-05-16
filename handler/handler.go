@@ -18,6 +18,8 @@ type PayloadResponse struct {
 
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
+
+		// decode request's payload into a PayloadRequest
 		var payloadRequest PayloadRequest
 		err := json.NewDecoder(r.Body).Decode(&payloadRequest)
 		if err != nil {
@@ -25,7 +27,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Return the JSON payload as the response
+		// return response with payload within
 		var payloadResponse PayloadResponse
 		payloadResponse.Url = "to do"
 		w.Header().Set("Content-Type", "application/json")
@@ -33,4 +35,5 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+	defer r.Body.Close()
 }
