@@ -32,6 +32,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
 
 	// shorten url
 	shortUrl, err := model.ShortenUrl(payloadRequest.Length)
@@ -44,6 +45,4 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	payloadResponse.Url = shortUrl
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(payloadResponse)
-
-	defer r.Body.Close()
 }
