@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"url-shortener/model"
 )
 
 // expected payload in the request
@@ -27,9 +28,15 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// shorten url
+		shortUrl, err := model.ShortenUrl(payloadRequest.Length)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
 		// return response with payload within
 		var payloadResponse PayloadResponse
-		payloadResponse.Url = "to do"
+		payloadResponse.Url = shortUrl
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(payloadResponse)
 	} else {
