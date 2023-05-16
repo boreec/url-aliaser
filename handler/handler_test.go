@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,6 +18,9 @@ func TestHandleRequestFailsOnGETRequest(t *testing.T) {
 	// Call the handler function with the mock request and response recorder
 	HandleRequest(rr, req)
 
-	// Check if the handler returned an error
+	// Check status
 	assert.Equal(t, http.StatusMethodNotAllowed, rr.Result().StatusCode)
+
+	// Check content of error
+	assert.Equal(t, ErrInvalidRequestMethod.Error(), strings.TrimRight(rr.Body.String(), "\n"))
 }
