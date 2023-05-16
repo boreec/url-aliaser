@@ -2,9 +2,12 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"url-shortener/model"
 )
+
+var ErrInvalidRequestMethod = errors.New("invalid request method")
 
 // expected payload in the request
 type PayloadRequest struct {
@@ -19,7 +22,7 @@ type PayloadResponse struct {
 
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		http.Error(w, ErrInvalidRequestMethod.Error(), http.StatusMethodNotAllowed)
 	}
 
 	// decode request's payload into a PayloadRequest
