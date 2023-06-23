@@ -12,7 +12,7 @@ var ErrInvalidRequestMethod = errors.New("invalid request method")
 // expected payload in the request
 type PayloadRequest struct {
 	Url    string `json:"url"`              // required
-	Length int    `json:"length,omitempty"` // optional
+	Length uint16 `json:"length,omitempty"` // optional
 }
 
 // payload returned
