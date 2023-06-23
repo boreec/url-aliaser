@@ -42,9 +42,11 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// return response with payload within
-	var payloadResponse PayloadResponse
-	payloadResponse.Url = shortUrl
+	// response header
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(payloadResponse)
+
+	// response body
+	if err := json.NewEncoder(w).Encode(PayloadResponse{Url: shortUrl}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
