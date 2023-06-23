@@ -17,23 +17,37 @@ const (
 )
 
 // for any given url, provide another one shorter
-func ShortenUrl(rawUrl string, length int) (string, error) {
-	if length == 0 {
-		return "", ErrUrlLengthZero
+func ShortenUrl(rawUrl string, length uint16) (string, error) {
+
+	if err := validateLength(length); err != nil {
+		return "", err
 	}
 
-	if length > UrlMaxLength {
-		return "", ErrUrlLengthTooLong
-	}
-
-	// Validate the url
-	parsedUrl, err := url.Parse(rawUrl)
-	if err != nil {
-		return "", ErrUrlWrongFormat
-	}
-	if !(parsedUrl.Scheme == "http" || parsedUrl.Scheme == "https") {
-		return "", ErrUrlNotHttpOrHttps
+	if err := validateUrl(rawUrl); err != nil {
+		return "", err
 	}
 
 	return "to do", nil
+}
+
+func validateUrl(rawUrl string) error {
+	parsedUrl, err := url.Parse(rawUrl)
+	if err != nil {
+		return ErrUrlWrongFormat
+	}
+	if !(parsedUrl.Scheme == "http" || parsedUrl.Scheme == "https") {
+		return ErrUrlNotHttpOrHttps
+	}
+	return nil
+}
+
+func validateLength(length uint16) error {
+	if length == 0 {
+		return ErrUrlLengthZero
+	}
+
+	if length > UrlMaxLength {
+		return ErrUrlLengthTooLong
+	}
+	return nil
 }
