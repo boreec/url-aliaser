@@ -12,7 +12,7 @@ var ErrInvalidRequestMethod = errors.New("invalid request method")
 // expected payload in the request
 type PayloadRequest struct {
 	Url    string `json:"url"`              // required
-	Length string `json:"length,omitempty"` // optional
+	Length int    `json:"length,omitempty"` // optional
 }
 
 // payload returned
@@ -36,7 +36,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// shorten url
-	shortUrl, err := model.ShortenUrl(payloadRequest.Length)
+	shortUrl, err := model.ShortenUrl(payloadRequest.Url, payloadRequest.Length)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
