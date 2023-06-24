@@ -8,10 +8,10 @@ import (
 )
 
 var (
-	ErrUrlLengthZero     = errors.New("provided Length for shortened url can not 0")
-	ErrUrlLengthTooLong  = errors.New("provided Length for shortened url can not be this long")
-	ErrUrlWrongFormat    = errors.New("provided Url for shortened url has incorrect format")
-	ErrUrlNotHttpOrHttps = errors.New("provided Url is not http or https")
+	ErrURLLengthZero     = errors.New("provided Length for shortening can not 0")
+	ErrURLLengthTooLong  = errors.New("provided Length for shortening can not be this long")
+	ErrURLWrongFormat    = errors.New("provided URL for shortening has incorrect format")
+	ErrURLNotHttpOrHttps = errors.New("provided URL for shortening is not http or https")
 )
 
 const (
@@ -49,10 +49,10 @@ func hash(rawUrl string, length uint16) string {
 func validateURL(rawUrl string) error {
 	parsedURL, err := url.Parse(rawUrl)
 	if err != nil {
-		return ErrUrlWrongFormat
+		return ErrURLWrongFormat
 	}
 	if !(parsedURL.Scheme == "http" || parsedURL.Scheme == "https") {
-		return ErrUrlNotHttpOrHttps
+		return ErrURLNotHttpOrHttps
 	}
 	return nil
 }
@@ -64,11 +64,11 @@ func validateURL(rawUrl string) error {
 // Returns `ErrURLLengthTooLoog` if the given length exceeds URLMaxLength.
 func validateLength(length uint16) error {
 	if length == 0 {
-		return ErrUrlLengthZero
+		return ErrURLLengthZero
 	}
 
 	if length > UrlMaxLength {
-		return ErrUrlLengthTooLong
+		return ErrURLLengthTooLong
 	}
 	return nil
 }

@@ -19,11 +19,11 @@ func TestShortenUrlCorrectLength(t *testing.T) {
 func TestShortenUrlLengthZero(t *testing.T) {
 	url := "https://example.com"
 	_, err := ShortenUrl(url, 0)
-	assert.ErrorIs(t, err, ErrUrlLengthZero)
+	assert.ErrorIs(t, err, ErrURLLengthZero)
 }
 
 func TestShortenUrlTooLong(t *testing.T) {
 	url := "https://example.com"
 	_, err := ShortenUrl(url, UrlMaxLength+1)
-	assert.ErrorIs(t, err, ErrUrlLengthTooLong)
+	assert.ErrorIs(t, err, ErrURLLengthTooLong)
 }
