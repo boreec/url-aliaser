@@ -25,7 +25,7 @@ func ShortenUrl(rawUrl string, length uint16) (string, error) {
 		return "", err
 	}
 
-	if err := validateUrl(rawUrl); err != nil {
+	if err := validateURL(rawUrl); err != nil {
 		return "", err
 	}
 
@@ -41,12 +41,17 @@ func hash(rawUrl string, length uint16) string {
 	return hex.EncodeToString(hash)[:length]
 }
 
-func validateUrl(rawUrl string) error {
-	parsedUrl, err := url.Parse(rawUrl)
+// ValidateURL checks if a given string represents a well-formed URL.
+//
+// Returns `nil` if the URL has a correct format and scheme.
+// Returns `ErrURLWrongFormat` if the URL has an incorrect format.
+// Returns `ErrURLMissingScheme` if the URL is missing the required http or https scheme.
+func validateURL(rawUrl string) error {
+	parsedURL, err := url.Parse(rawUrl)
 	if err != nil {
 		return ErrUrlWrongFormat
 	}
-	if !(parsedUrl.Scheme == "http" || parsedUrl.Scheme == "https") {
+	if !(parsedURL.Scheme == "http" || parsedURL.Scheme == "https") {
 		return ErrUrlNotHttpOrHttps
 	}
 	return nil
