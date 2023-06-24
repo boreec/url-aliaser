@@ -41,7 +41,7 @@ func hash(rawUrl string, length uint16) string {
 	return hex.EncodeToString(hash)[:length]
 }
 
-// ValidateURL checks if a given string represents a well-formed URL.
+// validateURL checks if a given string represents a well-formed URL.
 //
 // Returns `nil` if the URL has a correct format and scheme.
 // Returns `ErrURLWrongFormat` if the URL has an incorrect format.
@@ -57,6 +57,11 @@ func validateURL(rawUrl string) error {
 	return nil
 }
 
+// validateLength checks if a given length can be used as a target to shorten a string.
+//
+// Returns `nil` if the length is an appropriate value.
+// Returns `ErrURLLengthZero` if the given length is 0.
+// Returns `ErrURLLengthTooLoog` if the given length exceeds URLMaxLength.
 func validateLength(length uint16) error {
 	if length == 0 {
 		return ErrUrlLengthZero
