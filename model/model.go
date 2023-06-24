@@ -15,7 +15,8 @@ var (
 )
 
 const (
-	URLMaxLength = 2048
+	// Maximum length that can be given to shorten an URL.
+	URLMaxShorteningLength = 2048
 )
 
 // for any given url, provide another one shorter
@@ -67,7 +68,7 @@ func validateLength(length uint16) error {
 		return ErrURLLengthZero
 	}
 
-	if length > URLMaxLength {
+	if length > URLMaxShorteningLength {
 		return ErrURLLengthTooLong
 	}
 	return nil
