@@ -10,7 +10,7 @@ func TestShortenUrlCorrectLength(t *testing.T) {
 	url := "https://example.com"
 
 	for i := 1; i < 9; i++ {
-		shortened_url, err := ShortenUrl(url, uint16(i))
+		shortened_url, err := ShortenURL(url, uint16(i))
 		assert.NoError(t, err)
 		assert.Equal(t, i, len(shortened_url))
 	}
@@ -18,12 +18,12 @@ func TestShortenUrlCorrectLength(t *testing.T) {
 
 func TestShortenUrlLengthZero(t *testing.T) {
 	url := "https://example.com"
-	_, err := ShortenUrl(url, 0)
+	_, err := ShortenURL(url, 0)
 	assert.ErrorIs(t, err, ErrURLLengthZero)
 }
 
 func TestShortenUrlTooLong(t *testing.T) {
 	url := "https://example.com"
-	_, err := ShortenUrl(url, URLMaxLength+1)
+	_, err := ShortenURL(url, URLMaxLength+1)
 	assert.ErrorIs(t, err, ErrURLLengthTooLong)
 }

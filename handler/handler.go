@@ -36,7 +36,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// shorten url
-	shortUrl, err := model.ShortenUrl(payloadRequest.Url, payloadRequest.Length)
+	shortUrl, err := model.ShortenURL(payloadRequest.Url, payloadRequest.Length)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -19,7 +19,7 @@ const (
 )
 
 // for any given url, provide another one shorter
-func ShortenUrl(rawURL string, length uint16) (string, error) {
+func ShortenURL(rawURL string, length uint16) (string, error) {
 
 	if err := validateLength(length); err != nil {
 		return "", err
