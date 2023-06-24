@@ -30,16 +30,19 @@ func ShortenURL(rawURL string, length uint16) (string, error) {
 		return "", err
 	}
 
-	hashedURL := hash(rawURL, length)
-
-	return hashedURL, nil
+	return hash(rawURL, length)
 }
 
-func hash(rawURL string, length uint16) string {
+func hash(rawURL string, length uint16) (string, error) {
 	hasher := sha256.New()
-	hasher.Write([]byte(rawURL))
+
+	if _, err := hasher.Write([]byte(rawURL)); err != nil {
+		return "", err
+	}
+
 	hash := hasher.Sum(nil)
-	return hex.EncodeToString(hash)[:length]
+
+	return hex.EncodeToString(hash)[:length], nil
 }
 
 // validateURL checks if a given string represents a well-formed URL.
