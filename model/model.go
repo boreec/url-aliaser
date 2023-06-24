@@ -15,28 +15,28 @@ var (
 )
 
 const (
-	UrlMaxLength = 2048
+	URLMaxLength = 2048
 )
 
 // for any given url, provide another one shorter
-func ShortenUrl(rawUrl string, length uint16) (string, error) {
+func ShortenUrl(rawURL string, length uint16) (string, error) {
 
 	if err := validateLength(length); err != nil {
 		return "", err
 	}
 
-	if err := validateURL(rawUrl); err != nil {
+	if err := validateURL(rawURL); err != nil {
 		return "", err
 	}
 
-	hashedUrl := hash(rawUrl, length)
+	hashedURL := hash(rawURL, length)
 
-	return hashedUrl, nil
+	return hashedURL, nil
 }
 
-func hash(rawUrl string, length uint16) string {
+func hash(rawURL string, length uint16) string {
 	hasher := sha256.New()
-	hasher.Write([]byte(rawUrl))
+	hasher.Write([]byte(rawURL))
 	hash := hasher.Sum(nil)
 	return hex.EncodeToString(hash)[:length]
 }
@@ -67,7 +67,7 @@ func validateLength(length uint16) error {
 		return ErrURLLengthZero
 	}
 
-	if length > UrlMaxLength {
+	if length > URLMaxLength {
 		return ErrURLLengthTooLong
 	}
 	return nil

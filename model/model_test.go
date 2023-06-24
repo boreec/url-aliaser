@@ -24,6 +24,6 @@ func TestShortenUrlLengthZero(t *testing.T) {
 
 func TestShortenUrlTooLong(t *testing.T) {
 	url := "https://example.com"
-	_, err := ShortenUrl(url, UrlMaxLength+1)
+	_, err := ShortenUrl(url, URLMaxLength+1)
 	assert.ErrorIs(t, err, ErrURLLengthTooLong)
 }
