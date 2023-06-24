@@ -33,6 +33,20 @@ func ShortenURL(rawURL string, length uint16) (string, error) {
 	return hash(rawURL, length)
 }
 
+// hash calculates the hash of a given URL string and returns a truncated hexadecimal representation of the hash.
+//
+// It uses the SHA-256 hashing algorithm to compute the hash of the provided `rawURL` string.
+// The resulting hash is truncated to the specified `length` and returned as a hexadecimal string.
+//
+// Parameters:
+//
+//	rawURL: The URL string to be hashed.
+//	length: The desired length of the truncated hash in bytes.
+//
+// Returns:
+//
+//	A truncated hexadecimal representation of the hash.
+//	If an error occurs during the hashing process, an error is returned.
 func hash(rawURL string, length uint16) (string, error) {
 	hasher := sha256.New()
 
