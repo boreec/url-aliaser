@@ -1,6 +1,8 @@
 package model
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"net/url"
 )
@@ -27,7 +29,16 @@ func ShortenUrl(rawUrl string, length uint16) (string, error) {
 		return "", err
 	}
 
-	return "to do", nil
+	hashedUrl := hash(rawUrl, length)
+
+	return hashedUrl, nil
+}
+
+func hash(rawUrl string, length uint16) string {
+	hasher := sha256.New()
+	hasher.Write([]byte(rawUrl))
+	hash := hasher.Sum(nil)
+	return hex.EncodeToString(hash)[:length]
 }
 
 func validateUrl(rawUrl string) error {
