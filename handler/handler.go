@@ -8,6 +8,7 @@ import (
 )
 
 var ErrInvalidRequestMethod = errors.New("invalid request method")
+var urlMap = make(map[string]string) // Map to store the shortened URLs
 
 // expected payload in the request
 type PayloadRequest struct {
@@ -35,18 +36,30 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	// Check if the URL is already shortened
+	if shortUrl, ok := urlMap[payloadRequest.Url]; ok {
+		// URL already exists in the map, return the existing shortened URL
+		sendResponse(w, PayloadResponse{Url: shortUrl})
+		return
+	}
+
 	// shorten url
 	shortUrl, err := model.ShortenURL(payloadRequest.Url, payloadRequest.Length)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	urlMap[payloadRequest.Url] = shortUrl
 
+	sendResponse(w, PayloadResponse{Url: shortUrl})
+}
+
+func sendResponse(w http.ResponseWriter, payload PayloadResponse) {
 	// response header
 	w.Header().Set("Content-Type", "application/json")
 
 	// response body
-	if err := json.NewEncoder(w).Encode(PayloadResponse{Url: shortUrl}); err != nil {
+	if err := json.NewEncoder(w).Encode(payload); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
