@@ -1,14 +1,20 @@
 package handler
 
+/*
+ * Author: Cyprien Borée
+ * Email: cyprien[dot]boree[at]tuta[dot]io
+ * */
+
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
-	"url-shortener/model"
+	"url-aliaser/model"
 )
 
 var ErrInvalidRequestMethod = errors.New("invalid request method")
-var urlMap = make(map[PayloadRequest]string) // Map to store the shortened URLs
+var urlMap = make(map[string]string) // Map to store the shortened URLs
 
 // expected payload in the request
 type PayloadRequest struct {
@@ -21,7 +27,7 @@ type PayloadResponse struct {
 	Url string `json:"url"`
 }
 
-func HandleRequest(w http.ResponseWriter, r *http.Request) {
+func HandleShortenRequest(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, ErrInvalidRequestMethod.Error(), http.StatusMethodNotAllowed)
 		return
@@ -36,13 +42,6 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	// Check if the URL is already shortened
-	if storedURL, ok := urlMap[payloadRequest]; ok {
-		// URL already exists in the map, return the existing shortened URL
-		sendResponse(w, PayloadResponse{Url: storedURL})
-		return
-	}
-
 	// shorten url
 	hash, err := model.ShortenURL(payloadRequest.Url, payloadRequest.Length)
 	if err != nil {
@@ -50,8 +49,12 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	urlMap[payloadRequest] = "http://localhost:8080/" + hash
-	sendResponse(w, PayloadResponse{Url: urlMap[payloadRequest]})
+	aliasUrl := model.ServerPath + "/" + hash
+	urlMap[aliasUrl] = payloadRequest.Url
+
+	log.Printf("bind url '%s' to '%s'", payloadRequest.Url, aliasUrl)
+
+	sendResponse(w, PayloadResponse{Url: aliasUrl})
 }
 
 func sendResponse(w http.ResponseWriter, payload PayloadResponse) {
@@ -62,4 +65,16 @@ func sendResponse(w http.ResponseWriter, payload PayloadResponse) {
 	if err := json.NewEncoder(w).Encode(payload); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func HandleRedirectionRequest(w http.ResponseWriter, r *http.Request) {
+	requestUrl := model.ServerPath + r.URL.Path
+	originalUrl, exists := urlMap[requestUrl]
+	if !exists {
+		log.Printf("request url '%s' not found", requestUrl)
+		http.NotFound(w, r)
+		return
+	}
+	log.Printf("Redirecting '%s' to '%s'", requestUrl, originalUrl)
+	http.Redirect(w, r, originalUrl, http.StatusFound)
 }

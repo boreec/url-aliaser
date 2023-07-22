@@ -1,5 +1,10 @@
 package model
 
+/*
+ * Author: Cyprien Borée
+ * Email: cyprien[dot]boree[at]tuta[dot]io
+ * */
+
 import (
 	"testing"
 

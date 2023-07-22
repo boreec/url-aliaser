@@ -1,5 +1,10 @@
 package model
 
+/*
+ * Author: Cyprien Borée
+ * Email: cyprien[dot]boree[at]tuta[dot]io
+ * */
+
 import (
 	"crypto/sha256"
 	"encoding/hex"
@@ -8,7 +13,7 @@ import (
 )
 
 var (
-	ErrURLLengthZero     = errors.New("provided Length for shortening can not 0")
+	ErrURLLengthZero     = errors.New("provided Length for shortening can not be 0")
 	ErrURLLengthTooLong  = errors.New("provided Length for shortening can not be this long")
 	ErrURLWrongFormat    = errors.New("provided URL for shortening has incorrect format")
 	ErrURLNotHttpOrHttps = errors.New("provided URL for shortening is not http or https")
@@ -17,6 +22,8 @@ var (
 const (
 	// Maximum length that can be given to shorten an URL.
 	URLMaxShorteningLength = 2048
+	ServerPort             = "8080"
+	ServerPath             = "http://localhost:" + ServerPort
 )
 
 // for any given url, provide another one shorter

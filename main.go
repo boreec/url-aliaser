@@ -1,18 +1,26 @@
 package main
 
+/*
+ * Author: Cyprien Borée
+ * Email: cyprien[dot]boree[at]tuta[dot]io
+ * */
+
 import (
 	"fmt"
 	"log"
 	"net/http"
 
-	"url-shortener/handler"
+	"url-aliaser/handler"
+	"url-aliaser/model"
 )
 
 func main() {
 
-	http.HandleFunc("/shorten", handler.HandleRequest)
+	// endpoints
+	http.HandleFunc("/alias", handler.HandleShortenRequest)
+	http.HandleFunc("/", handler.HandleRedirectionRequest)
 
-	// Start the server on port 8080
-	fmt.Println("Server listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// start the server on port 8080
+	fmt.Printf("Server listening on port %s:\n", model.ServerPort)
+	log.Fatal(http.ListenAndServe(":"+model.ServerPort, nil))
 }

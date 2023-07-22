@@ -1,5 +1,10 @@
 package handler
 
+/*
+ * Author: Cyprien Borée
+ * Email: cyprien[dot]boree[at]tuta[dot]io
+ * */
+
 import (
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +21,7 @@ func TestHandleRequestFailsOnGETRequest(t *testing.T) {
 	rr := httptest.NewRecorder()
 
 	// Call the handler function with the mock request and response recorder
-	HandleRequest(rr, req)
+	HandleShortenRequest(rr, req)
 
 	// Check status
 	assert.Equal(t, http.StatusMethodNotAllowed, rr.Result().StatusCode)
